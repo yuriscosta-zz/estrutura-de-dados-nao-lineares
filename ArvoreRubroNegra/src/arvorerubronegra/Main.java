@@ -17,14 +17,18 @@ public class Main {
     public static void main(String[] args) {
         Arvore arvoreRN = new Arvore();
         
-        arvoreRN.inserir(3);
-        arvoreRN.inserir(5);
-        arvoreRN.inserir(6);
-        arvoreRN.inserir(2);
+        for (int i = 0; i < 20; i++) {
+            arvoreRN.inserir(i);
+        }
         
-        arvoreRN.inserir(6);
-        
-        arvoreRN.remover(6);
+//        arvoreRN.inserir(3);
+//        arvoreRN.inserir(5);
+//        arvoreRN.inserir(6);
+//        arvoreRN.inserir(2);
+//        
+//        arvoreRN.inserir(6);
+//        
+//        arvoreRN.remover(6);
         arvoreRN.imprimir(arvoreRN.raiz);
         arvoreRN.gerarHtml(arvoreRN.raiz, "rn.html");
     }
