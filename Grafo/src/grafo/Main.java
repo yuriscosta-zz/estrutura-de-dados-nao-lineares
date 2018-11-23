@@ -22,21 +22,14 @@ public class Main {
         grafo.adicionarVertice();
         grafo.adicionarVertice();
 
-        grafo.adicionarAresta("0", "0", 50);
-        grafo.adicionarAresta("0", "0", 20);
-        grafo.adicionarAresta("2", "3", 90);
-        grafo.adicionarAresta("1", "4", 50);
+        grafo.adicionarAresta("1", "0", 20);
+        grafo.adicionarAresta("0", "0", 100);
+        grafo.adicionarAresta("3", "2", 90);
 
-//        grafo.imprimirVertices();
-//        grafo.imprimirArestas();
-        grafo.substituirVertice("1", "4");
-        grafo.substituirVertice("1", "4");
+        grafo.imprimirVertices();
+        grafo.imprimirArestas();
 
-//        grafo.imprimirVertices();
-//        grafo.substituirAresta("0", 100);
-//        grafo.imprimirArestas();
-//        grafo.matrizAdjacencia();;
-//        grafo.matrizIncidencia();
-//        grafo.matrizCusto();
+        grafo.removerVertice("0");
+        grafo.imprimirArestas();
     }
 }

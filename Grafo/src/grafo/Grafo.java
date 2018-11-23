@@ -57,10 +57,26 @@ public class Grafo {
             valor = (String) verticeAux.valor;
             vertices.remove(verticeAux);
         }
+        
+        removerArestaAux(valor, vertice);
 
         System.out.println(valor);
     }
-
+    
+    public void removerArestaAux(String nomeVertice, String numerovertice) {
+        System.out.println("Removendo arestas da vértice removida:");
+        
+        ArrayList<Aresta> arestasAux = new ArrayList<>();
+        
+        for (Aresta a : arestas) {
+            if (!a.inicio.valor.equals(nomeVertice) && !a.fim.valor.equals(nomeVertice)) {
+                arestasAux.add(a);
+            }
+        }
+           
+        arestas = arestasAux;
+    }
+            
     public void removerAresta(String inicio, String fim, Object custo) {
         System.out.println("Remover aresta:");
         String valor = "Valor não encontrado";
@@ -139,11 +155,9 @@ public class Grafo {
     }
 
     public void imprimirArestas() {
-        int qtd = 0;
         System.out.println("Listar arestas:");
         for (Aresta a : arestas) {
             System.out.println(a.toString());
-            qtd++;
         }
     }
 
@@ -219,11 +233,11 @@ public class Grafo {
             if (vertices.indexOf(v1) == 0) {
                 for (Vertice v2 : vertices) {
                     if (vertices.indexOf(v2) == 0) {
-                        System.out.print("   " + this.espacar(espaco, v2.valor));
+                        System.out.print("   " + this.espacar(v2.valor));
                     } else if (vertices.indexOf(v1) < vertices.size()) {
-                        System.out.print(this.espacar(espaco, v2.valor));
+                        System.out.print(this.espacar(v2.valor));
                     } else {
-                        System.out.print(this.espacar(espaco, v2.valor));
+                        System.out.print(this.espacar(v2.valor));
                     }
                 }
 
@@ -235,7 +249,7 @@ public class Grafo {
                     System.out.print(v1.valor + "|");
                 }
 
-                System.out.print(espacar(espaco, totalCusto(v1, v2)));
+                System.out.print(espacar(totalCusto(v1, v2)));
             }
 
             System.out.println("");
@@ -289,8 +303,9 @@ public class Grafo {
         }
     }
 
-    private String espacar(int count, String custo) {
+    private String espacar(String custo) {
         String resultado = "";
+
         int i = espaco;
         while (i > custo.length()) {
             resultado += " ";
@@ -298,14 +313,5 @@ public class Grafo {
         }
 
         return resultado + custo + "|";
-    }
-
-    public boolean eConexo() {
-        ArrayList<Vertice> v = vertices;
- 
-        int count = 0;
-        
-        
-        return count <= 1;
     }
 }
