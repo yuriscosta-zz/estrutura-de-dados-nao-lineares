@@ -6,6 +6,9 @@
 package grafo;
 
 import java.util.ArrayList;
+import java.util.Vector;
+import javafx.scene.Camera;
+import jdk.nashorn.internal.objects.NativeArray;
 
 /**
  *
@@ -57,26 +60,26 @@ public class Grafo {
             valor = (String) verticeAux.valor;
             vertices.remove(verticeAux);
         }
-        
+
         removerArestaAux(valor, vertice);
 
         System.out.println(valor);
     }
-    
+
     public void removerArestaAux(String nomeVertice, String numerovertice) {
         System.out.println("Removendo arestas da vértice removida:");
-        
+
         ArrayList<Aresta> arestasAux = new ArrayList<>();
-        
+
         for (Aresta a : arestas) {
             if (!a.inicio.valor.equals(nomeVertice) && !a.fim.valor.equals(nomeVertice)) {
                 arestasAux.add(a);
             }
         }
-           
+
         arestas = arestasAux;
     }
-            
+
     public void removerAresta(String inicio, String fim, Object custo) {
         System.out.println("Remover aresta:");
         String valor = "Valor não encontrado";
@@ -113,9 +116,29 @@ public class Grafo {
         return null;
     }
 
+    private Aresta existeArestaSemCusto(Vertice v1, Vertice v2) {
+        for (Aresta aresta : this.arestas) {
+            if (aresta.inicio == v1 && aresta.fim == v2) {
+                return aresta;
+            }
+        }
+
+        return null;
+    }
+
+    private Aresta ExisteArestaComNome(String nome) {
+        for (Aresta aresta : this.arestas) {
+            if (aresta.nome.equals(nome)) {
+                return aresta;
+            }
+        }
+
+        return null;
+    }
+
     private boolean eAdjacente(Vertice v1, Vertice v2) {
         for (Aresta a : arestas) {
-            if ((a.inicio == v1 && a.fim == v2) || (a.inicio == v2 && a.fim == v1)) {
+            if (a.inicio == v1 && a.fim == v2) {
                 return true;
             }
         }
@@ -132,6 +155,68 @@ public class Grafo {
         }
 
         return total;
+    }
+
+    public void Distancia(String inicio, String fim) {
+        System.out.println("A menor rota = v" + inicio + " -> v" + fim);
+
+        Vertice vInicio = existeVertice(inicio);
+        Vertice vFim = existeVertice(fim);
+
+        if (vInicio == null || vFim == null) {
+            System.out.println("Vértice(s) Inexistente(s)");
+        } else {
+            ArrayList<Rota> abertas = new ArrayList<>();
+            ArrayList<Rota> fechadas = new ArrayList<>();
+
+            Rota rotaPai = new Rota();
+            rotaPai.vertice = vInicio;
+            rotaPai.peso = funcaoL(vInicio, vInicio);
+            rotaPai.pai = null;
+
+            while (!rotaPai.vertice.equals(fim)) {
+                ArrayList<Rota> adjacentes = rotasAdjacentes(rotaPai);
+                for (int i = 1; i < adjacentes.size(); i++) {
+                    if (rotaPai.pai != null) {
+                        adjacentes.get(i).pai.peso = rotaPai.pai.peso + funcaoL(
+                                rotaPai.vertice, adjacentes.get(i).vertice
+                        );
+                    } else {
+                        adjacentes.get(i).pai.peso = funcaoL(
+                                rotaPai.vertice, adjacentes.get(i).vertice
+                        );
+                    }
+
+                    if (!fechadas.contains(adjacentes.get(i))) {
+                        adjacentes.get(i).pai = rotaPai;
+                    }
+
+                    abertas.add(adjacentes.get(i));
+                }
+
+                fechadas.add(rotaPai);
+                abertas.remove(rotaPai);
+                rotaPai = menorCaminhoAdjacente(adjacentes);
+            }
+
+            System.out.println("Rota a percorrer:");
+            Rota rotaAux = rotaPai;
+            int custo = 0;
+            String texto = "";
+
+            while (rotaAux != null) {
+                custo += rotaAux.peso;
+                if (rotaAux.pai == null) {
+                    texto = rotaAux.vertice.valor + "[" + rotaAux.peso + "]" + texto;
+                } else {
+                    texto = " -> " + rotaAux.vertice.valor + "[" + rotaAux.peso + "]" + texto;
+                }
+
+                rotaAux = rotaAux.pai;
+            }
+
+            System.out.println(texto + "\nCusto total: " + custo);
+        }
     }
 
     private String totalCusto(Vertice v1, Vertice v2) {
@@ -313,5 +398,43 @@ public class Grafo {
         }
 
         return resultado + custo + "|";
+    }
+
+    private int funcaoL(Vertice inicio, Vertice fim) {
+        Aresta aresta = existeArestaSemCusto(inicio, fim);
+        if (inicio == fim) {
+            return 0;
+        } else if (aresta != null) {
+            return (Integer) aresta.custo;
+        } else {
+            return 999;
+        }
+    }
+
+    private ArrayList<Rota> rotasAdjacentes(Rota rotaPai) {
+        ArrayList<Rota> rotas = new ArrayList<>();
+        for (Aresta aresta : arestas) {
+            if (rotaPai.vertice == aresta.inicio) {
+                Rota rota = new Rota();
+                rota.vertice = aresta.fim;
+                rota.pai = rotaPai;
+                rota.peso = (Integer) aresta.custo;
+                rotas.add(rota);
+            }
+        }
+
+        return rotas;
+    }
+
+    private Rota menorCaminhoAdjacente(ArrayList<Rota> adjacentes) {
+        int menor = 999;
+        Rota rota = adjacentes.get(0);
+        for (Rota r : adjacentes) {
+            if (menor > r.peso) {
+                rota = r;
+            }
+        }
+        
+        return rota;
     }
 }
