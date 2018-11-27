@@ -21,15 +21,21 @@ public class Main {
         grafo.adicionarVertice();
         grafo.adicionarVertice();
         grafo.adicionarVertice();
+        grafo.adicionarVertice();
+        grafo.adicionarVertice();
 
-        grafo.adicionarAresta("1", "0", 20);
-        grafo.adicionarAresta("0", "0", 100);
-        grafo.adicionarAresta("3", "2", 90);
+        grafo.adicionarAresta("1", "0", 10);
+        grafo.adicionarAresta("2", "4", 20);
+        grafo.adicionarAresta("3", "5", 30);
+        grafo.adicionarAresta("1", "3", 40);
+        grafo.adicionarAresta("2", "3", 50);
+        
+        grafo.descobrirMelhorCaminho("1", "5");
 
-        grafo.imprimirVertices();
-        grafo.imprimirArestas();
-
-        grafo.removerVertice("0");
-        grafo.imprimirArestas();
+//        grafo.imprimirVertices();
+//        grafo.imprimirArestas();
+//
+//        grafo.removerVertice("0");
+//        grafo.imprimirArestas();
     }
 }

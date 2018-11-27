@@ -126,25 +126,26 @@ public class Grafo {
         return null;
     }
 
-    private Aresta ExisteArestaComNome(String nome) {
-        for (Aresta aresta : this.arestas) {
-            if (aresta.nome.equals(nome)) {
-                return aresta;
-            }
-        }
+//
+//    private Aresta ExisteArestaComNome(String nome) {
+//        for (Aresta aresta : this.arestas) {
+//            if (aresta.nome.equals(nome)) {
+//                return aresta;
+//            }
+//        }
+//
+//        return null;
+//    }
 
-        return null;
-    }
-
-    private boolean eAdjacente(Vertice v1, Vertice v2) {
-        for (Aresta a : arestas) {
-            if (a.inicio == v1 && a.fim == v2) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+//    private boolean eAdjacente(Vertice v1, Vertice v2) {
+//        for (Aresta a : arestas) {
+//            if (a.inicio == v1 && a.fim == v2) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 
     private int adjacencia(Vertice v1, Vertice v2) {
         int total = 0;
@@ -157,7 +158,7 @@ public class Grafo {
         return total;
     }
 
-    public void Distancia(String inicio, String fim) {
+    public void descobrirMelhorCaminho(String inicio, String fim) {
         System.out.println("A menor rota = v" + inicio + " -> v" + fim);
 
         Vertice vInicio = existeVertice(inicio);
@@ -171,18 +172,18 @@ public class Grafo {
 
             Rota rotaPai = new Rota();
             rotaPai.vertice = vInicio;
-            rotaPai.peso = funcaoL(vInicio, vInicio);
+            rotaPai.peso = retornarCusto(vInicio, vInicio);
             rotaPai.pai = null;
 
-            while (!rotaPai.vertice.equals(fim)) {
+            while (!rotaPai.vertice.equals(vFim)) {
                 ArrayList<Rota> adjacentes = rotasAdjacentes(rotaPai);
                 for (int i = 1; i < adjacentes.size(); i++) {
                     if (rotaPai.pai != null) {
-                        adjacentes.get(i).pai.peso = rotaPai.pai.peso + funcaoL(
+                        adjacentes.get(i).pai.peso = rotaPai.pai.peso + retornarCusto(
                                 rotaPai.vertice, adjacentes.get(i).vertice
                         );
                     } else {
-                        adjacentes.get(i).pai.peso = funcaoL(
+                        adjacentes.get(i).pai.peso = retornarCusto(
                                 rotaPai.vertice, adjacentes.get(i).vertice
                         );
                     }
@@ -400,14 +401,14 @@ public class Grafo {
         return resultado + custo + "|";
     }
 
-    private int funcaoL(Vertice inicio, Vertice fim) {
+    private int retornarCusto(Vertice inicio, Vertice fim) {
         Aresta aresta = existeArestaSemCusto(inicio, fim);
         if (inicio == fim) {
             return 0;
         } else if (aresta != null) {
             return (Integer) aresta.custo;
         } else {
-            return 999;
+            return 1000000000;
         }
     }
 
@@ -427,7 +428,7 @@ public class Grafo {
     }
 
     private Rota menorCaminhoAdjacente(ArrayList<Rota> adjacentes) {
-        int menor = 999;
+        int menor = 1000000000;
         Rota rota = adjacentes.get(0);
         for (Rota r : adjacentes) {
             if (menor > r.peso) {
